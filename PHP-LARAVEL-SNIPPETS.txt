@@ -1,0 +1,37 @@
+PHP LARAVEL SNIPPETS
+
+
+#---------------------
+#ERROR HANDLING
+#-----------------
+u+se Illuminate\Http\Response;
++use Illuminate\Support\Facades\Log;
++use App\Exceptions\ApiException;
+
+---HTTP
+return response()->json([
+    'name' => 'Abigail',
+    'state' => 'CA'
+]);
+
+return response('Hello World', 200)
+
+---LOGGING
+Log::emergency("Hello World");
+Log::alert("Hello World");
+Log::critical("Hello World");
+Log::error("Hello World");
+Log::warning("Hello World");
+Log::notice("Hello World");
+Log::info("Hello World");
+Log::debug("Hello World");
+Log::info('Project Manager: '.$project->manager->name. ' is no longer accepting text messages.');
+
+---API Exception
+return response()->json(['status' => 'error', 'message' => $this->message], 400);
+
+
+
+
+
+

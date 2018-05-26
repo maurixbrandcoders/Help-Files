@@ -1,0 +1,18 @@
+#start server from cmd
+node weinre.server/weinre –httpPort 8080
+#or 
+nmp weinre --httpPort [portNumber]
+nmp weinre --httpPort 8080
+
+node weinre --boundHost -all-
+
+cd C:\AddOn-Program-Files\node
+
+npm install -g weinre
+
+
+##run start
+node.exe node_modules\weinre\weinre --boundHost -all-
+node.exe node_modules\weinre\weinre --boundHost -all- --debug true
+ 
+

@@ -1,0 +1,91 @@
+
+/*============================*/
+/*-------------------------*/
+/* OPTIMIZATION */
+/*-------------------*/
+if(!is_admin()){
+	
+	
+	//remove useless styles from parent
+	add_action('wp_print_styles',function(){
+		$remove = array(
+			'et_google_fonts_style',
+			'magnific-popup',
+			'et-core-main-fonts',
+			'divi-fonts',
+			'et-gf-open-sans',
+		);
+		foreach($remove as $style){
+			wp_dequeue_style( $style );
+			wp_deregister_style( $style );
+		}
+		
+	},500);
+
+	//remove useless scripts from parent
+	function remove_scripts(){
+		$scripts = array(
+			'divi-fonts',
+			'divi-fitvids',
+			'magnific-popup',
+			'isotope',
+			'wp-embed'
+		);
+		foreach($scripts as $script){
+			wp_deregister_script( $script );
+			wp_dequeue_script( $script );
+		}
+		return;
+	}
+	
+	add_action('wp_enqueue_scripts','remove_scripts',500);
+	add_action('wp_print_scripts','remove_scripts',500);
+	add_action('wp_print_footer_scripts','remove_scripts',500);
+
+	//Remove useless emojis
+	remove_action('wp_head', 'print_emoji_detection_script', 7);
+	remove_action('wp_print_styles', 'print_emoji_styles');
+	
+	// Function to remove version numbers
+	//helps to cache
+	function remove_ver( $src ) {
+		if ( strpos( $src, 'ver=' ) )
+			$src = remove_query_arg( 'ver', $src );
+		return $src;
+	}
+	add_filter( 'style_loader_src', 'remove_ver', 9999 );
+	add_filter( 'script_loader_src', 'remove_ver', 9999 );
+
+	
+	/*
+	function wp_inspect_scripts() {
+		
+		global $wp_scripts;
+		echo '<pre><h1>Script Handles</h1><ul>';
+		foreach( $wp_scripts->queue as $handle ) :
+			echo '<li>' . $handle . '</li>';
+		endforeach;
+		echo '</ul></pre>';
+		exit();
+	}
+	add_action( 'wp_print_scripts', 'wp_inspect_scripts' );
+	add_action('wp_print_footer_scripts','wp_inspect_scripts');
+	*/
+	
+	/*
+	function wp_inspect_styles() {
+		global $wp_styles;
+		echo '<pre><h1>Style Handles</h1><ul>';
+		foreach( $wp_styles->queue as $handle ) :
+			echo '<li>' . $handle . '</li>';
+		endforeach;
+		echo '</ul></pre>';
+		exit();
+	}
+	add_action( 'wp_print_styles', 'wp_inspect_styles' );
+	*/
+	
+}else{
+	remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+	remove_action( 'admin_print_styles', 'print_emoji_styles' );
+}

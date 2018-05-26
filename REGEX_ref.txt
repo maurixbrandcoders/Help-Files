@@ -1,0 +1,5 @@
+==REGEX===
+
+FIND script = '#<script(.*?)>(.*?)</script>#is'
+
+

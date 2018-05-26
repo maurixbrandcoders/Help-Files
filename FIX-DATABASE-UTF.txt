@@ -1,0 +1,17 @@
+include_once (__DIR__.'/mysql.query.php');
+//connect to database
+$mysql = new mysql();
+
+$tables = $mysql->get_setQuery('SHOW TABLES');
+
+while($table = $mysql->getQueryArray($tables)){
+	foreach($table as $key=>$name){
+		
+		$mysql->get_setQuery("ALTER TABLE $name CONVERT TO CHARACTER SET utf8");
+		//$mysql->get_setQuery("ALTER TABLE $name COLLATE utf8mb4_unicode_ci");
+		echo 'altered';
+		
+	}
+	echo 1;
+}
+exit;

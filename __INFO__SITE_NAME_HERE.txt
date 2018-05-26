@@ -1,0 +1,25 @@
+WEBSITE NAME HERE IN CAPS
+
+
++=========================
+..BACK END ADMIN
++=========================
+
+URL; 
+EMAIL; 
+USER; 
+PASS; 
+
+
+
++=========================
+...HOSTING INFO
++=========================
+
+HOST; 
+DB; 
+USER; 
+PASS; 
+
+
+

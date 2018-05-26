@@ -1,0 +1,340 @@
+GIT COMMANDS
+
+#---------------------
+#COMPOSER
+#----------------
+composer dump-autoload -o
+composer install && npm install && npm run dev
+#-COMPILE--->  npm install && npm run dev
+
+npm run watch
+
+#---------------------
+#ARTISAN
+#-----------------
+
+php artisan migrate && npm install && npm run dev
+php artisan make:migration
+
+#---------------------
+#MUNDANE TASKS
+#-----------------
+
+#git flow
+git start feature/CBB-
+git finish
+git start prodfix/CBB-
+
+#for local dev tasks
+git merge development
+git checkout development
+
+#clear the checkout conflicts
+git checkout -- .
+
+
+
+#branch name
+git checkout CBB-
+
+#delete a branch
+git branch -D CBB-
+
+#delete bach history
+history -c
+
+#--------------------------------------
+#--AUTOMATED COMMANDS [GITCONFIG]
+#-------------------------------
+
+git track:    Creates local tracking branches for all remote branches (except master & development)
+
+git untrack: Deletes all local tracking branches for all remote branches (except master & development)
+
+git update: Updates local tracking branches with the latest remote changes (except master & development)
+
+git ssh-dev: SSHs to the dev web environment
+git ssh-beta: SSHs to the beta web environment
+git ssh-prod: SSHs to the prod web environment
+
+
+#---------------------
+#SUBMODULES
+#----------------
+
+git submodule add git@github.com:url_to/awesome_submodule.git path_to_awesome_submodule
+
+--delete
+1. git submodule deinit -f -- a/submodule    
+2. rm -rf .git/modules/a/submodule
+3. git rm -f a/submodule
+
+#---------------------
+#GITHUB + BITBUCKET
+#----------------
+
+#commit all at once
+git add -A && git commit -am "
+
+#create
+touch README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin git@github.com:fdgcreative/freshfoodfactor.git
+git push -u origin master
+
+#push 
+git remote add origin git@github.com:fdgcreative/freshfoodfactor.git
+git push -u origin master
+git push origin master
+
+#abort merge
+git merge --abort
+
+#commit all changes
+git commit -am  "<commit message>"
+
+## to stash or or to ingore mergin errors
+git stash save --keep-index
+git stash drop
+
+#switch branch
+git checkout branch_name_here
+
+#clone
+git@github.com:fdgcreative/freshfoodfactor.git
+git clone git@github.com:fdgcreative/Columbia_Residential.git folder-name
+
+collaborators
+
+orangepixel
+
+
+#KEY
+ssh-keygen -p
+
+## hard reset
+git reset HEAD
+
+##
+git reset --soft HEAD~1
+git reset --soft HEAD^ 
+
+git reset HEAD DesignAssets/PSD
+
+reset last
+git reset --hard HEAD~1
+
+
+
+    This will unstage all files you might have staged with git add:
+
+    git reset
+
+    This will revert all local uncommitted changes (should be executed in repo root):
+
+    git checkout .
+
+    You can also revert uncommitted changes only to particular file or directory:
+
+    git checkout [some_dir|file.txt]
+
+    Yet another way to revert all uncommitted changes (longer to type, but works from any subdirectory):
+
+    git reset --hard HEAD
+
+    This will remove all local untracked files, so only git tracked files remain:
+
+    git clean -fdx
+
+
+git rm -r --cached "PackagerCMS/SourceFiles/CMSTemplates-master.zip"
+git filter-branch --tree-filter 'rm -rf PackagerCMS/SourceFiles/CMSTemplates-master.zip' HEAD
+
+# Do this on all machines
+echo "FILE_NAME" >> .gitignore
+git rm --cached FILE_NAME ||or|| git reset HEAD FILE_NAME 
+git add -u
+git commit -m "removing files from version control"
+# Sync with your git server, pull to sync and push to register your local change
+git pull
+git push
+
+
+git reset --hard # removes staged and working directory changes
+
+git clean -f -d # remove untracked files
+
+#remove cached file or big files that can't be pushed
+git filter-branch -f --index-filter "git rm -rf --cached --ignore-unmatch FOLDERNAME" -- --all
+
+GIT MERGE BRANCHES
+
+Step 1: From your project repository, bring in the changes and test.
+
+git fetch origin
+git checkout -b dev origin/dev
+git merge master
+
+Step 2: Merge the changes and update on GitHub.
+
+git checkout master
+git merge --no-ff dev
+git push origin master
+
+
+#---------------------------
+# ALIASES + SHORTCUTS
+#-------------------------
+
+[alias]
+
+# Lists all aliases in this file
+# usage:    git aliases
+aliases = !"cat ~/.gitconfig"
+
+
+# ---------------------------------------------------------------------------
+# Branching
+# ---------------------------------------------------------------------------
+
+# Lists all local branches
+# usage:    git b
+b = branch
+
+# Checks out a branch
+# usage:    git co BRANCH_NAME
+# example:  git co bugfixes
+co = checkout
+
+# Checks out the master branch
+# usage:    git com
+com = checkout master
+
+# Checks out the development branch
+# usage:    git cod
+cod = checkout development
+
+# Creates and checks out a new branch
+# usage:    git new BRANCH_NAME
+# example:  git new bugfixes
+new = checkout -b
+
+# Renames a branch
+# usage:    git rename [OLD_BRANCH_NAME] NEW_BRANCH_NAME
+# example:  git rename new-name
+# example:  git rename old-name new-name
+rename = branch -m
+
+# Creates a local tracking copy of a remote branch
+# usage:    git copy REMOTE_USER REMOTE_BRANCH
+# example:  git copy mpetrovich bugfix
+copy = !"git fetch $1 $2 && git checkout -b $2 $1/$2 && true"
+
+# Deletes a single branch locally and in the origin
+# usage:    git delete BRANCH_NAME
+# example:  git delete bugfix
+delete = !"git branch -D "$1"; git push origin :$1 && true"
+
+# Shows all remotes
+# usage:    git remotes
+remotes = remote -v show
+
+
+# ---------------------------------------------------------------------------
+# History
+# ---------------------------------------------------------------------------
+
+# Show all commits made since the local master branch
+# usage:    git since development
+since = !"git --no-pager log $1..HEAD --abbrev-commit --pretty=oneline"
+
+# Show a tree log visualization of the commit history
+# usage:    git tree
+tree = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+# ...with timestamps
+# usage:    git trees
+trees = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) %C(bold cyan)%aD%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+
+
+# ---------------------------------------------------------------------------
+# Reviewing
+# ---------------------------------------------------------------------------
+
+# Show an abbreviate view of files with uncommitted changes
+# usage:    git s
+s = status -sb
+
+# Show unstaged changes made in the current branch inline
+# usage:    git diffy
+diffy = diff --no-ext-diff
+
+# Remove any uncommitted changes, including new & removed files
+# CAUTION: This is destructive and cannot be undone
+# usage:    git nuke
+nuke = !"git reset --hard && git clean -fd"
+
+
+# ---------------------------------------------------------------------------
+# Committing
+# ---------------------------------------------------------------------------
+
+# Commit all changes with the given commit message
+# usage:    git commitall "MESSAGE"
+# example:  git commitall "Fix bug for XYZ"
+commitall = !"git add --all && git commit -a -m"
+
+# Amend the last commit with only staged changes
+# usage:    git amend
+amend = !"git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend"
+
+# Amend the last commit with all uncommitted changes
+# usage:    git amends
+amends = !"git add --all && git amend"
+
+# Amend the last commit with any staged changes and a different message
+# usage:    git amendmsg "MESSAGE"
+# example:  git amendmsg "Fix bugs for XYZ"
+amendmsg = commit --amend -m
+
+# Commit all changes as a work-in-progress commit
+# usage:    git wip
+wip = !"git add --all && git commit -a -m "WIP" --no-verify"
+
+# Undo a work-in-progress commit (ie, opposite of `git wip`)
+# usage:    git unwip
+unwip = !"git undo && git unstage"
+
+# Squash all commits made since master
+# usage:    git squash "MESSAGE"
+# example:  git squash "Fix bug for XYZ"
+squash = !"COMMITS=`git rev-list --count HEAD ^master`; git reset --soft HEAD~$COMMITS; git commit -m \"$1\" && true"
+
+# Un-commit the last N commits, but keep it staged
+# usage:    git undo [NUMBER_OF_COMMITS=1]
+# example:  git undo    # Last commit
+# example:  git undo 3  # Last 3 commits
+undo = !"git reset --soft HEAD~$1 && true"
+
+
+# ---------------------------------------------------------------------------
+# Rebasing
+# ---------------------------------------------------------------------------
+
+# Commits all resolved conflicts and continues the rebase
+# usage:    git rbc
+continue = !"git add --all && git rebase --continue"
+
+# Skips a rebase step
+# usage:    git skip
+skip = rebase --skip
+
+# Aborts an in-progress rebase
+# usage:    git abort
+abort = rebase --abort
+
+
+
+
+
