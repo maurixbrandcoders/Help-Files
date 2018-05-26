@@ -66,24 +66,21 @@ Deny from all
 Order Deny,Allow
 Deny from all
 
-#allow Prismatic
-allow from 97.68.244.46
+#allow client
+allow from 00.00.00.00
 
-#localhost
-##some servers wont allow this
-Allow from ::1
 
 #from server
-Allow from 74.124.219.116
+Allow from 00.00.00.00
 
 #from CLIENT
-##Allow from 69.254.219.35
+##Allow from 00.00.00.00
 ## 255 characteres at the end XXX
-##Allow from 50.251.141.0/24
+##Allow from 00.00.00.0/24
 ##  50.251.XX.XX
-##Allow from 50.251.0/16
+##Allow from 00.00.0/16
 ##  50.XX.XX.XX
-##Allow from 50.0/8
+##Allow from 00.0/8
 
 </FilesMatch>
 ##--> end ACCESS TO LOGIN
@@ -103,23 +100,21 @@ RewriteCond %{REQUEST_URI} ^(.*)/administrator [OR]
 RewriteCond %{REQUEST_URI} ^/wp-admin(!/admin-ajax.php)$
 
 ##CLIENT
-##RewriteCond %{REMOTE_ADDR} !^69\.254\.219\.35$
+##RewriteCond %{REMOTE_ADDR} !^00\.000\.000\.00$
 
 ##From Hosting server
-RewriteCond %{REMOTE_HOST} !velocity.red$
-RewriteCond %{REMOTE_ADDR} !^74\.124\.219\.116$
+RewriteCond %{REMOTE_HOST} !thehost.com$
+RewriteCond %{REMOTE_ADDR} !^00\.000\.000\.00$
 
-##From Prismatic
-RewriteCond %{REMOTE_ADDR} !^97\.68\.244\.46$
+##From Client
+RewriteCond %{REMOTE_ADDR} !^00\.000\.000\.00$
 
-##From Moes
-RewriteCond %{REMOTE_ADDR} !^71\.47\.147\.210$
 
 ##1-3 numbers at end
-##RewriteCond %{REMOTE_ADDR} !^54\.192\.[0-9]{1,3}\.[0-9]{1,3}$
+##RewriteCond %{REMOTE_ADDR} !^00\.000\.[0-9]{1,3}\.[0-9]{1,3}$
 ##any number at end
-##RewriteCond %{REMOTE_ADDR} !^97\.68\.244\.[0-9]+ 
-##RewriteCond %{REMOTE_ADDR} !^97\.68\.244\.[a-zA-Z0-9_.-]*
+##RewriteCond %{REMOTE_ADDR} !^00\.00\.000\.[0-9]+ 
+##RewriteCond %{REMOTE_ADDR} !^00\.00\.000\.[a-zA-Z0-9_.-]*
 
 RewriteRule ^(.*)$ - [R=403,L]
 </IfModule>
@@ -598,6 +593,71 @@ RewriteRule .* index.php [L]
 #### -----------> OTHER <--------------
 
 
+
+## --> Begin - Custom redirects
+DirectoryIndex home.php index.php
+RewriteBase /
+RewriteRule ^contact/(.*)$ /$1 [R=301,NC,L]
+
+## redirect from WWW to non WWW
+RewriteBase /
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+
+## enforce HTTPS/SSL
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+#enforce the https // ssl
+RewriteCond %{HTTPS} off 
+RewriteCond %{HTTP_HOST} !^beta\.oldflorida\.com$ [NC]
+RewriteCond %{HTTP_HOST} !^(beta|fb|map|testsub)\. [NC]
+RewriteRule ^(.*)$ https://www.oldflorida.com%{REQUEST_URI} [R=301,L]
+
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+
+# SSL for subdomains only
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} ^(beta|fb|map|testsub)\. [NC]
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
+
+##to edu
+RewriteCond %{REQUEST_URI} ^/educatio(.*)$ [OR]
+##feed
+RewriteCond %{REQUEST_URI} ^/feed(.*)$ [OR]
+RewriteCond %{REQUEST_URI} ^/feed$
+##----SEND TO HOME 
+PAGE
+
+RewriteRule ^(.*)$ /? [R=301,NE,NC,L]
+
+#redirect if any subdomain is 
+#accessed directly in folder by subdirectory
+RedirectMatch 301 /beta/(.*) https://beta.oldflorida.com/$1
+
+##Anything with this query
+RewriteCond %{QUERY_STRING} (^|&)p=(2547|451|13|42|1564) [OR]
+RewriteCond %{QUERY_STRING} (^|&)page_id\=(.*)($|&)
+RewriteCond %{QUERY_STRING} !(^|&)page_id\=(26|32|28|55|30|26|28|53|32)($|&)
+
+
+# ERROr documents
+ErrorDocument 404 /error.php 
+
+
+#redirect the subdirectory
+##RewriteBase /
+
+##redirect to catch custom url that have no file/index/folder
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^/(apartments|interiors|amenities|photos|neighborhood|residents|news|specials|register|contact|affordable)/?  [NC]
+RewriteRule .*      /#%1                 [R=301,L,NE]
+
+
 ###======================================================
 ###---------- 301s ------------
 ###-------------------------------
@@ -663,120 +723,9 @@ RewriteRule ^news/(.+?)(-[0-9]+)?$ /blog/$1 [L,R=301]
 ####-------------> END 301s
 ####===================================
 
-# memory
-<IfModule mod_php5.c>
-php_value memory_limit 64M
-</IfModule>
-
-
-#enforce the https // ssl
-RewriteCond %{HTTPS} off 
-RewriteCond %{HTTP_HOST} !^beta\.oldflorida\.com$ [NC]
-RewriteCond %{HTTP_HOST} !^(beta|fb|map|testsub)\. [NC]
-RewriteRule ^(.*)$ https://www.oldflorida.com%{REQUEST_URI} [R=301,L]
-
-RewriteEngine On
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-
-# SSL for subdomains only
-RewriteCond %{HTTPS} off
-RewriteCond %{HTTP_HOST} ^(beta|fb|map|testsub)\. [NC]
-RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
-
-##to edu
-RewriteCond %{REQUEST_URI} ^/educatio(.*)$ [OR]
-##feed
-RewriteCond %{REQUEST_URI} ^/feed(.*)$ [OR]
-RewriteCond %{REQUEST_URI} ^/feed$
-##----SEND TO HOME 
-PAGE
-
-RewriteRule ^(.*)$ /? [R=301,NE,NC,L]
-
-#redirect if any subdomain is 
-#accessed directly in folder by subdirectory
-RedirectMatch 301 /beta/(.*) https://beta.oldflorida.com/$1
-
-##Anything with this query
-RewriteCond %{QUERY_STRING} (^|&)p=(2547|451|13|42|1564) [OR]
-RewriteCond %{QUERY_STRING} (^|&)page_id\=(.*)($|&)
-RewriteCond %{QUERY_STRING} !(^|&)page_id\=(26|32|28|55|30|26|28|53|32)($|&)
-
-
-# ERROr documents
-ErrorDocument 404 /error.php 
 
 
 
-
-#redirect the subdirectory
-##RewriteBase /
-
-##redirect to catch custom url that have no file/index/folder
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} ^/(apartments|interiors|amenities|photos|neighborhood|residents|news|specials|register|contact|affordable)/?  [NC]
-RewriteRule .*      /#%1                 [R=301,L,NE]
-
-## --> Begin - Custom redirects
-DirectoryIndex home.php index.php
-RewriteBase /
-RewriteRule ^contact/(.*)$ /$1 [R=301,NC,L]
-
-## redirect from WWW to non WWW
-RewriteBase /
-RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
-
-
-## enforce HTTPS/SSL
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-
-# restrict access by password and IP
-
-#AuthType Basic
-#AuthName "restricted area"
-#AuthUserFile /var/www/vhosts/oldflorida.com/httpdocs/beta/.htpasswd
-#require valid-user
-
-order deny,allow
-deny from all
-# network solutions / website
-allow from 205.178.136.106
-
-#OFNB
-allow from 209.155.119.114
-
-#john
-allow from 76.124.188.111
-
-#FDG
-allow from 97.68.244.46
-
-
-
-
-
-
-
-# year
-<filesmatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|mp3|mp4)$"="">
-Header set Cache-Control "public"
-Header set Expires "Thu, 15 Apr 2010 20:00:00 GMT"
-Header unset Last-Modified
-</filesmatch>
-#2 hours
-<filesmatch "\.(html|htm|xml|txt|xsl)$"="">
-Header set Cache-Control "max-age=7200, must-revalidate"
-</filesmatch>
-<filesmatch "\.(js|css)$"="">
-SetOutputFilter DEFLATE
-Header set Expires "Thu, 15 Apr 2010 20:00:00 GMT"
-</filesmatch>
 
 
 
