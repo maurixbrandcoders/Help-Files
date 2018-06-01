@@ -1,0 +1,10 @@
+[alias]
+# Lists all aliases in this file
+# usage:    git aliases
+aliases = !"cat .gitconfig"
+
+#pull and get submodules
+pullall = !".gitcommands/pullall $1 #"
+
+#do commit and push 
+save = !".gitcommands/save $1 #"

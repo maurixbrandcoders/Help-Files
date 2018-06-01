@@ -1,0 +1,41 @@
+
+if(typeof ga !== 'undefined' || window.ga !== null){
+							
+		ga('send', 'event', {
+			eventCategory: 'Lead',
+			eventAction: 'Clicked',
+			eventLabel: 'Contact submission'
+		  });
+
+	}
+	if(typeof _gaq === 'object'){
+		
+		_gaq.push(['_trackEvent', 'Lead', 'Clicked','Contact submission']);
+	}
+
+
+
+<script type="text/javascript">
+  if(typeof ga !== 'undefined' || ga !== null){
+						
+	  ga('send', 'event', 'leads', 'clicked', 'contact');
+	  console.log( 2 );
+	  
+  }
+  
+  jQuery(document).on('submitResponse.example', function( e, response ){
+    if ( response.errors === false ) {
+        // Code to be fired upon a submission here
+	ga('send', 'event', 'leads', 'clicked', 'contact');
+	  console.log( 2 );
+    }
+    return true;
+});
+</script>
+
+if(typeof window._gaq !== 'undefined' || window._gaq !== null){
+					_gaq.push('_trackEvent', 'clicked', 'contact');
+					//console.log( '_gaq' );
+				}
+
+

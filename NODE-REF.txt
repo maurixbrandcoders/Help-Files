@@ -1,0 +1,6 @@
+//remove node files 
+rimraf node_modules
+
+//stop process
+ctrl-c
+killall -9 grunt

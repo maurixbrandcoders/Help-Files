@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+#
+#
+# save workflow
+#
+
+set -e
+
+if [[ $@ ]]; then
+	MSG=$@
+else
+	# Defaults to current branch
+	MSG="wip saved"
+fi
+# save on current only
+BRANCH=`git rev-parse --abbrev-ref HEAD`
+
+if [[ $MSG ]]; then
+	set -x
+	#add and commit in one shot
+	git add -A && git commit -am "$MSG"
+	#do a pull to sync, but if there are conflicts it will stop
+	git pull origin $BRANCH
+	#no conflicts, good, then push to remote
+	git push origin $BRANCH
+	set +x
+else
+	echo ""
+	echo "not saved"
+	echo ""
+	exit
+fi
